@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scoops & Smiles — Artisanal Ice Cream Parlor</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* =============================================
+       CSS CUSTOM PROPERTIES (Design Tokens)
+    ============================================= */
+    :root {
+      --mint:        #b5ead7;
+      --mint-light:  #d9f5ec;
+      --mint-dark:   #7dcfae;
+      --vanilla:     #fdf4dc;
+      --vanilla-mid: #f8e8b0;
+      --pink:        #ffb7c5;
+      --pink-light:  #ffe0e8;
+      --pink-dark:   #f4849a;
+      --charcoal:    #2d2d2d;
+      --charcoal-mid:#4a4a4a;
+      --white:       #ffffff;
+      --shadow-sm:   0 2px 8px rgba(0,0,0,.08);
+      --shadow-md:   0 6px 24px rgba(0,0,0,.12);
+      --shadow-lg:   0 16px 48px rgba(0,0,0,.15);
+      --radius-sm:   12px;
+      --radius-md:   20px;
+      --radius-lg:   32px;
+      --radius-pill: 999px;
+      --transition:  .3s cubic-bezier(.34,1.56,.64,1);
+      --font-display:'Pacifico', cursive;
+      --font-body:   'Nunito', sans-serif;
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--charcoal);
+      background: var(--vanilla);
+      overflow-x: hidden;
+    }
+
+    img { display: block; max-width: 100%; }
+    a   { text-decoration: none; color: inherit; }
+    ul  { list-style: none; }
+
+    /* =============================================
+       DECORATIVE BLOBS (background shapes)
+    ============================================= */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: .45;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* =============================================
+       STICKY NAVIGATION
+    ============================================= */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(253,244,220,.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 2px solid var(--vanilla-mid);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    /* Logo */
+    .nav__logo {
+      font-family: var(--font-display);
+      font-size: 1.55rem;
+      color: var(--charcoal);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+    }
+    .nav__logo-icon {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--pink) 0%, var(--mint) 100%);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Links */
+    .nav__links {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .nav__links a {
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      font-weight: 600;
+      font-size: .95rem;
+      color: var(--charcoal-mid);
+      transition: background .2s, color .2s;
+    }
+    .nav__links a:hover {
+      background: var(--pink-light);
+      color: var(--charcoal);
+    }
+
+    /* Hamburger */
+    .nav__toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      font-size: 1.4rem;
+      color: var(--charcoal);
+    }
+
+    /* Mobile menu */
+    .nav__mobile {
+      display: none;
+      flex-direction: column;
+      background: var(--vanilla);
+      border-top: 2px solid var(--vanilla-mid);
+      padding: 16px 24px 20px;
+      gap: 4px;
+    }
+    .nav__mobile a {
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      color: var(--charcoal-mid);
+      transition: background .2s;
+    }
+    .nav__mobile a:hover { background: var(--pink-light); }
+    .nav__mobile.open { display: flex; }
+
+    /* =============================================
+       HERO SECTION
+    ============================================= */
+    .hero {
+      position: relative;
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      background: linear-gradient(160deg, var(--pink-light) 0%, var(--vanilla) 50%, var(--mint-light) 100%);
+      padding: 80px 24px;
+    }
+
+    /* Decorative dots pattern */
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(255,183,197,.4) 1.5px, transparent 1.5px);
+      background-size: 36px 36px;
+      pointer-events: none;
+    }
+
+    .hero__blob-1 { width: 420px; height: 420px; background: var(--pink);  top: -80px;  left: -100px; }
+    .hero__blob-2 { width: 380px; height: 380px; background: var(--mint);  bottom: -60px; right: -80px; }
+    .hero__blob-3 { width: 220px; height: 220px; background: var(--vanilla-mid); top: 50%;  left: 55%; }
+
+    .hero__content {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+    }
+
+    .hero__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--white);
+      border: 2px solid var(--pink);
+      border-radius: var(--radius-pill);
+      padding: 6px 18px;
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--pink-dark);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+      animation: fadeDown .6s ease both;
+    }
+
+    .hero__headline {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 7vw, 5.2rem);
+      line-height: 1.1;
+      color: var(--charcoal);
+      margin-bottom: 20px;
+      animation: fadeDown .7s .1s ease both;
+    }
+    .hero__headline span { color: var(--pink-dark); }
+
+    .hero__sub {
+      font-size: 1.15rem;
+      color: var(--charcoal-mid);
+      max-width: 480px;
+      margin: 0 auto 36px;
+      line-height: 1.65;
+      animation: fadeDown .7s .2s ease both;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: transform var(--transition), box-shadow .25s;
+    }
+    .btn:hover { transform: translateY(-3px) scale(1.03); box-shadow: var(--shadow-md); }
+    .btn:active { transform: scale(.97); }
+
+    .btn--primary {
+      background: linear-gradient(135deg, var(--pink-dark) 0%, #e8607a 100%);
+      color: var(--white);
+      box-shadow: 0 6px 20px rgba(244,132,154,.45);
+      animation: fadeDown .7s .3s ease both;
+    }
+
+    .hero__scoops {
+      position: absolute;
+      bottom: -10px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 5rem;
+      display: flex;
+      gap: 12px;
+      animation: float 3s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* =============================================
+       SECTION SHARED STYLES
+    ============================================= */
+    section { position: relative; overflow: hidden; }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .section-header__tag {
+      display: inline-block;
+      background: var(--mint);
+      color: var(--charcoal);
+      border-radius: var(--radius-pill);
+      padding: 5px 16px;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .section-header h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .section-header p {
+      max-width: 520px;
+      margin: 0 auto;
+      color: var(--charcoal-mid);
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* =============================================
+       ABOUT SECTION
+    ============================================= */
+    .about {
+      background: var(--white);
+      padding: 100px 0;
+    }
+
+    .about__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    /* Placeholder image frame */
+    .about__img-frame {
+      aspect-ratio: 4/3;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, var(--mint-light), var(--mint));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 4.5rem;
+      color: var(--mint-dark);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+    .about__img-frame::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 20px,
+        rgba(255,255,255,.35) 20px,
+        rgba(255,255,255,.35) 22px
+      );
+    }
+    .about__img-frame span { font-size: 1rem; font-weight: 700; color: var(--mint-dark); z-index: 1; }
+
+    .about__text h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+    .about__text p {
+      color: var(--charcoal-mid);
+      line-height: 1.75;
+      margin-bottom: 18px;
+      font-size: 1.04rem;
+    }
+
+    /* Pillar badges */
+    .about__pillars {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .about__pillar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--vanilla);
+      border: 2px solid var(--vanilla-mid);
+      border-radius: var(--radius-pill);
+      padding: 8px 18px;
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--charcoal-mid);
+    }
+    .about__pillar i { color: var(--pink-dark); }
+
+    /* =============================================
+       BEST SELLERS SECTION
+    ============================================= */
+    .bestsellers {
+      padding: 100px 0;
+      background: linear-gradient(180deg, var(--vanilla) 0%, var(--pink-light) 100%);
+    }
+
+    .bestsellers__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    .bs-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 36px 28px 32px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      border: 2px solid transparent;
+      transition: transform var(--transition), box-shadow .3s, border-color .3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .bs-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--pink);
+    }
+
+    /* Top ribbon */
+    .bs-card__ribbon {
+      position: absolute;
+      top: 16px; right: -28px;
+      background: linear-gradient(135deg, var(--pink-dark), #e8607a);
+      color: var(--white);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 5px 36px;
+      transform: rotate(35deg);
+      box-shadow: 0 2px 8px rgba(244,132,154,.4);
+    }
+
+    /* Placeholder image */
+    .bs-card__img {
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,.1);
+    }
+    .bs-card--vanilla .bs-card__img  { background: linear-gradient(135deg, var(--vanilla-mid), #f0d66e); }
+    .bs-card--choco   .bs-card__img  { background: linear-gradient(135deg, #c8834a, #7b3f00); }
+    .bs-card--mango   .bs-card__img  { background: linear-gradient(135deg, #ffd966, #ff9a00); }
+
+    .bs-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      margin-bottom: 10px;
+    }
+    .bs-card p {
+      color: var(--charcoal-mid);
+      font-size: .95rem;
+      line-height: 1.65;
+    }
+
+    /* =============================================
+       FULL MENU SECTION
+    ============================================= */
+    .menu {
+      padding: 100px 0 120px;
+      background: var(--white);
+    }
+
+    /* Category tabs */
+    .menu__tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 48px;
+    }
+    .menu__tab {
+      background: var(--vanilla);
+      border: 2px solid var(--vanilla-mid);
+      border-radius: var(--radius-pill);
+      padding: 9px 22px;
+      font-family: var(--font-body);
+      font-size: .9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s, border-color .2s, color .2s;
+      color: var(--charcoal-mid);
+    }
+    .menu__tab:hover,
+    .menu__tab.active {
+      background: var(--charcoal);
+      border-color: var(--charcoal);
+      color: var(--white);
+    }
+
+    /* Menu grid */
+    .menu__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .menu-card {
+      background: var(--vanilla);
+      border: 2px solid var(--vanilla-mid);
+      border-radius: var(--radius-md);
+      padding: 24px 22px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: transform var(--transition), box-shadow .3s, border-color .3s, background .3s;
+      cursor: default;
+      position: relative;
+    }
+    .menu-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--mint-dark);
+      background: var(--mint-light);
+    }
+
+    /* Emoji swatch */
+    .menu-card__swatch {
+      font-size: 2.2rem;
+      margin-bottom: 2px;
+    }
+    .menu-card__name {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      line-height: 1.2;
+    }
+    .menu-card__desc {
+      font-size: .88rem;
+      color: var(--charcoal-mid);
+      line-height: 1.6;
+      flex: 1;
+    }
+    .menu-card__price {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--pink-dark);
+      margin-top: 6px;
+    }
+
+    /* "Regional Favorite" badge */
+    .badge--regional {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: linear-gradient(135deg, var(--pink-dark), #e8607a);
+      color: var(--white);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      border-radius: var(--radius-pill);
+      padding: 3px 11px;
+      width: fit-content;
+      box-shadow: 0 2px 8px rgba(244,132,154,.4);
+    }
+
+    /* =============================================
+       FOOTER / CONTACT
+    ============================================= */
+    .footer {
+      background: var(--charcoal);
+      color: var(--white);
+      padding: 80px 0 40px;
+    }
+
+    .footer__grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 56px;
+    }
+
+    .footer__brand .nav__logo {
+      margin-bottom: 16px;
+      color: var(--white);
+    }
+    .footer__brand .nav__logo-icon {
+      background: linear-gradient(135deg, var(--pink-dark), var(--mint-dark));
+    }
+    .footer__brand p {
+      color: #aaa;
+      line-height: 1.7;
+      font-size: .95rem;
+      max-width: 280px;
+    }
+
+    /* Social icons */
+    .footer__socials {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .footer__social {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.1);
+      display: flex; align-items: center; justify-content: center;
+      color: #ccc;
+      font-size: 1rem;
+      transition: background .2s, color .2s, transform var(--transition);
+    }
+    .footer__social:hover {
+      background: var(--pink-dark);
+      color: var(--white);
+      transform: translateY(-3px);
+    }
+
+    .footer__col h4 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      color: var(--vanilla-mid);
+    }
+
+    .footer__info {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .footer__info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      color: #aaa;
+      font-size: .92rem;
+      line-height: 1.6;
+    }
+    .footer__info-item i {
+      color: var(--mint-dark);
+      margin-top: 2px;
+      width: 16px;
+      flex-shrink: 0;
+    }
+
+    /* Hours */
+    .footer__hours {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer__hours-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: .9rem;
+      color: #aaa;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      padding-bottom: 8px;
+    }
+    .footer__hours-row span:last-child { color: var(--mint); font-weight: 600; }
+
+    /* Bottom bar */
+    .footer__bottom {
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding-top: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: .85rem;
+      color: #666;
+    }
+    .footer__bottom a { color: var(--pink); }
+
+    /* =============================================
+       ANIMATIONS
+    ============================================= */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes float {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50%      { transform: translateX(-50%) translateY(-14px); }
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 900px) {
+      .about__grid        { grid-template-columns: 1fr; gap: 40px; }
+      .about__img-frame   { aspect-ratio: 16/7; }
+      .bestsellers__grid  { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+      .footer__grid       { grid-template-columns: 1fr 1fr; }
+      .footer__brand      { grid-column: 1/-1; }
+    }
+
+    @media (max-width: 640px) {
+      .nav__links         { display: none; }
+      .nav__toggle        { display: block; }
+      .hero__scoops       { font-size: 3rem; }
+      .menu__grid         { grid-template-columns: 1fr; }
+      .footer__grid       { grid-template-columns: 1fr; }
+      .footer__bottom     { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =============================================
+       NAVIGATION
+  ============================================= -->
+  <header class="nav" id="top">
+    <div class="nav__inner">
+      <!-- Logo -->
+      <a href="#top" class="nav__logo" aria-label="Scoops and Smiles home">
+        <div class="nav__logo-icon">🍦</div>
+        Scoops &amp; Smiles
+      </a>
+
+      <!-- Desktop links -->
+      <nav class="nav__links" aria-label="Main navigation">
+        <a href="#about">About</a>
+        <a href="#bestsellers">Best Sellers</a>
+        <a href="#menu">Menu</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <!-- Hamburger (mobile) -->
+      <button class="nav__toggle" aria-label="Open menu" id="navToggle">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+
+    <!-- Mobile dropdown -->
+    <nav class="nav__mobile" id="navMobile" aria-label="Mobile navigation">
+      <a href="#about"       onclick="closeMobileNav()">About</a>
+      <a href="#bestsellers" onclick="closeMobileNav()">Best Sellers</a>
+      <a href="#menu"        onclick="closeMobileNav()">Menu</a>
+      <a href="#contact"     onclick="closeMobileNav()">Contact</a>
+    </nav>
+  </header>
+
+
+  <!-- =============================================
+       HERO
+  ============================================= -->
+  <section class="hero" id="hero">
+    <!-- Blobs -->
+    <div class="blob hero__blob-1"></div>
+    <div class="blob hero__blob-2"></div>
+    <div class="blob hero__blob-3"></div>
+
+    <div class="hero__content">
+      <div class="hero__eyebrow">
+        <i class="fa-solid fa-star"></i>
+        Handcrafted with Love Since 2010
+      </div>
+
+      <h1 class="hero__headline">
+        Happiness in<br><span>Every Scoop.</span>
+      </h1>
+
+      <p class="hero__sub">
+        Small-batch artisanal ice cream made from the freshest local ingredients
+        and time-honored family recipes. Because every moment deserves a little sweetness.
+      </p>
+
+      <a href="#menu" class="btn btn--primary">
+        <i class="fa-solid fa-ice-cream"></i>
+        Explore Our Menu
+      </a>
+    </div>
+
+    <!-- Floating scoops -->
+    <div class="hero__scoops" aria-hidden="true">🍨 🍦 🍧</div>
+  </section>
+
+
+  <!-- =============================================
+       ABOUT US
+  ============================================= -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about__grid">
+
+        <!-- Placeholder image -->
+        <div class="about__img-frame reveal" role="img" aria-label="Our parlor — image placeholder">
+          🏠
+          <span>Our Parlor</span>
+        </div>
+
+        <!-- Text -->
+        <div class="about__text reveal">
+          <h2>Crafted Fresh,<br>Served with Joy.</h2>
+          <p>
+            At Scoops &amp; Smiles, we believe that ice cream is more than a treat—it's a moment
+            shared. Since 2010, our family has been handcrafting every single batch right here in
+            our little parlor, using only the finest seasonal fruits, farm-fresh dairy, and spices
+            sourced from trusted local farmers.
+          </p>
+          <p>
+            We never cut corners. No artificial colours, no preservatives—just pure, honest
+            ingredients combined with traditional churning techniques passed down through generations.
+            Whether it's a classic Vanilla Bean or our signature Alphonso Mango, every scoop tells a story.
+          </p>
+
+          <div class="about__pillars">
+            <div class="about__pillar"><i class="fa-solid fa-leaf"></i> Fresh Ingredients</div>
+            <div class="about__pillar"><i class="fa-solid fa-heart"></i> Family Recipes</div>
+            <div class="about__pillar"><i class="fa-solid fa-flask"></i> No Preservatives</div>
+            <div class="about__pillar"><i class="fa-solid fa-handshake"></i> Local Farmers</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       BEST SELLERS
+  ============================================= -->
+  <section class="bestsellers" id="bestsellers">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-header__tag">⭐ Fan Favourites</div>
+        <h2>Our Best Sellers</h2>
+        <p>Three beloved classics that keep our guests coming back, week after week.</p>
+      </div>
+
+      <div class="bestsellers__grid">
+
+        <!-- Vanilla Bean -->
+        <article class="bs-card bs-card--vanilla reveal">
+          <div class="bs-card__ribbon">Best Seller</div>
+          <div class="bs-card__img">🍦</div>
+          <h3>Vanilla Bean</h3>
+          <p>
+            Rich Madagascar vanilla beans steeped in silky cream — a timeless classic that never
+            disappoints. Speckled with real vanilla seeds in every spoonful.
+          </p>
+        </article>
+
+        <!-- Double Chocolate -->
+        <article class="bs-card bs-card--choco reveal">
+          <div class="bs-card__ribbon">Best Seller</div>
+          <div class="bs-card__img">🍫</div>
+          <h3>Double Chocolate</h3>
+          <p>
+            Velvety dark-chocolate base loaded with house-made chocolate fudge ribbons.
+            A chocoholic's dream in a cup — intensely rich, deeply satisfying.
+          </p>
+        </article>
+
+        <!-- Alphonso Mango -->
+        <article class="bs-card bs-card--mango reveal">
+          <div class="bs-card__ribbon">Best Seller</div>
+          <div class="bs-card__img">🥭</div>
+          <h3>Alphonso Mango</h3>
+          <p>
+            Pure Ratnagiri Alphonso pulp churned into creamy perfection. Summer sunshine
+            in a scoop — sweet, fragrant, and bursting with tropical flavour.
+          </p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       FULL MENU
+  ============================================= -->
+  <section class="menu" id="menu">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-header__tag">🍨 The Full Menu</div>
+        <h2>20 Flavours of Bliss</h2>
+        <p>From everyday classics to regional treasures — there's a perfect scoop waiting for you.</p>
+      </div>
+
+      <!-- Filter tabs -->
+      <div class="menu__tabs" role="tablist" aria-label="Filter menu by category">
+        <button class="menu__tab active" data-filter="all"      role="tab">All Flavours</button>
+        <button class="menu__tab"        data-filter="classic"  role="tab">Classics</button>
+        <button class="menu__tab"        data-filter="fruity"   role="tab">Fruity</button>
+        <button class="menu__tab"        data-filter="nutty"    role="tab">Nutty</button>
+        <button class="menu__tab"        data-filter="regional" role="tab">Regional</button>
+      </div>
+
+      <!-- Grid of 20 flavours -->
+      <div class="menu__grid" id="menuGrid">
+
+        <!-- 1 -->
+        <article class="menu-card reveal" data-category="classic">
+          <div class="menu-card__swatch">🍦</div>
+          <div class="menu-card__name">Vanilla Bean</div>
+          <p class="menu-card__desc">
+            Madagascar vanilla beans steeped in pure cream, speckled with real vanilla seeds.
+            The timeless scoop that started it all.
+          </p>
+          <div class="menu-card__price">₹120 / scoop</div>
+        </article>
+
+        <!-- 2 -->
+        <article class="menu-card reveal" data-category="classic">
+          <div class="menu-card__swatch">🍫</div>
+          <div class="menu-card__name">Double Chocolate</div>
+          <p class="menu-card__desc">
+            Dark-chocolate base with swirling fudge ribbons. Rich, indulgent, and utterly
+            unforgettable for every chocoholic.
+          </p>
+          <div class="menu-card__price">₹130 / scoop</div>
+        </article>
+
+        <!-- 3 -->
+        <article class="menu-card reveal" data-category="fruity">
+          <div class="menu-card__swatch">🥭</div>
+          <div class="menu-card__name">Alphonso Mango</div>
+          <p class="menu-card__desc">
+            Sun-ripened Ratnagiri Alphonso pulp churned into creamy perfection.
+            Fragrant, luscious, and intensely tropical.
+          </p>
+          <div class="menu-card__price">₹140 / scoop</div>
+        </article>
+
+        <!-- 4 -->
+        <article class="menu-card reveal" data-category="classic">
+          <div class="menu-card__swatch">🍓</div>
+          <div class="menu-card__name">Strawberry Fields</div>
+          <p class="menu-card__desc">
+            Fresh Mahabaleshwar strawberries folded into a light cream base with real
+            fruit pieces. Sweet, tangy, and rosy pink.
+          </p>
+          <div class="menu-card__price">₹125 / scoop</div>
+        </article>
+
+        <!-- 5 -->
+        <article class="menu-card reveal" data-category="nutty">
+          <div class="menu-card__swatch">🌰</div>
+          <div class="menu-card__name">Butter Pecan</div>
+          <p class="menu-card__desc">
+            Toasted pecans caramelised in golden butter, swirled through a butterscotch-cream base.
+            Nutty, warm, and deeply comforting.
+          </p>
+          <div class="menu-card__price">₹145 / scoop</div>
+        </article>
+
+        <!-- 6 -->
+        <article class="menu-card reveal" data-category="classic">
+          <div class="menu-card__swatch">🍵</div>
+          <div class="menu-card__name">Matcha Green Tea</div>
+          <p class="menu-card__desc">
+            Ceremonial-grade Japanese matcha whisked into a creamy, subtly sweet base.
+            Earthy, elegant, and beautifully pale green.
+          </p>
+          <div class="menu-card__price">₹150 / scoop</div>
+        </article>
+
+        <!-- 7 -->
+        <article class="menu-card reveal" data-category="fruity">
+          <div class="menu-card__swatch">🫐</div>
+          <div class="menu-card__name">Wild Blueberry</div>
+          <p class="menu-card__desc">
+            Hand-picked wild blueberries blended into a vibrant, velvety scoop with a
+            naturally jammy, berry-forward flavour.
+          </p>
+          <div class="menu-card__price">₹135 / scoop</div>
+        </article>
+
+        <!-- 8 -->
+        <article class="menu-card reveal" data-category="classic">
+          <div class="menu-card__swatch">🍪</div>
+          <div class="menu-card__name">Cookies &amp; Cream</div>
+          <p class="menu-card__desc">
+            Generously studded with crushed chocolate wafer cookies in a snow-white
+            vanilla cream. A perennial crowd-pleaser.
+          </p>
+          <div class="menu-card__price">₹130 / scoop</div>
+        </article>
+
+        <!-- 9 -->
+        <article class="menu-card reveal" data-category="classic">
+          <div class="menu-card__swatch">🍬</div>
+          <div class="menu-card__name">Salted Caramel</div>
+          <p class="menu-card__desc">
+            Slow-cooked caramel ribbons through a silky base, finished with a pinch of
+            Himalayan pink salt. Sweet, salty, and wholly addictive.
+          </p>
+          <div class="menu-card__price">₹140 / scoop</div>
+        </article>
+
+        <!-- 10 -->
+        <article class="menu-card reveal" data-category="regional">
+          <div class="menu-card__swatch">🌸</div>
+          <div class="menu-card__name">Kesar Pista</div>
+          <div class="badge--regional"><i class="fa-solid fa-map-pin"></i> Regional Favourite</div>
+          <p class="menu-card__desc">
+            Pure saffron strands from Kashmir melted into rich cream, studded with
+            hand-crushed pistachios. Regal, aromatic, unforgettable.
+          </p>
+          <div class="menu-card__price">₹160 / scoop</div>
+        </article>
+
+        <!-- 11 -->
+        <article class="menu-card reveal" data-category="regional">
+          <div class="menu-card__swatch">🥥</div>
+          <div class="menu-card__name">Tender Coconut</div>
+          <div class="badge--regional"><i class="fa-solid fa-map-pin"></i> Regional Favourite</div>
+          <p class="menu-card__desc">
+            Freshly scraped tender coconut meat suspended in a light coconut-milk base.
+            Refreshing, delicate, and quintessentially coastal.
+          </p>
+          <div class="menu-card__price">₹140 / scoop</div>
+        </article>
+
+        <!-- 12 -->
+        <article class="menu-card reveal" data-category="fruity">
+          <div class="menu-card__swatch">🍋</div>
+          <div class="menu-card__name">Lemon Sorbet</div>
+          <p class="menu-card__desc">
+            Freshly squeezed lemon juice and zest churned into a dairy-free, palate-cleansing
+            sorbet that's bright, citrusy, and refreshing.
+          </p>
+          <div class="menu-card__price">₹110 / scoop</div>
+        </article>
+
+        <!-- 13 -->
+        <article class="menu-card reveal" data-category="nutty">
+          <div class="menu-card__swatch">🥜</div>
+          <div class="menu-card__name">Peanut Butter Cup</div>
+          <p class="menu-card__desc">
+            Creamy peanut butter base layered with mini chocolate cups and a
+            chocolate fudge ripple. Playful, rich, and deeply satisfying.
+          </p>
+          <div class="menu-card__price">₹145 / scoop</div>
+        </article>
+
+        <!-- 14 -->
+        <article class="menu-card reveal" data-category="fruity">
+          <div class="menu-card__swatch">🍒</div>
+          <div class="menu-card__name">Black Cherry</div>
+          <p class="menu-card__desc">
+            Whole Bing cherries macerated in natural cherry syrup folded through
+            vanilla cream. Bold fruit flavour with gorgeous colour.
+          </p>
+          <div class="menu-card__price">₹135 / scoop</div>
+        </article>
+
+        <!-- 15 -->
+        <article class="menu-card reveal" data-category="regional">
+          <div class="menu-card__swatch">🌿</div>
+          <div class="menu-card__name">Gulkand Rose</div>
+          <p class="menu-card__desc">
+            Old Delhi-style gulkand (rose petal preserve) swirled through delicately
+            flavoured cream. Floral, fragrant, and divinely Indian.
+          </p>
+          <div class="menu-card__price">₹150 / scoop</div>
+        </article>
+
+        <!-- 16 -->
+        <article class="menu-card reveal" data-category="classic">
+          <div class="menu-card__swatch">☕</div>
+          <div class="menu-card__name">Cold Brew Coffee</div>
+          <p class="menu-card__desc">
+            Single-origin cold brew concentrate churned with cream for an intensely
+            smooth, coffee-forward scoop with a gentle caffeine lift.
+          </p>
+          <div class="menu-card__price">₹145 / scoop</div>
+        </article>
+
+        <!-- 17 -->
+        <article class="menu-card reveal" data-category="fruity">
+          <div class="menu-card__swatch">🍈</div>
+          <div class="menu-card__name">Lychee &amp; Mint</div>
+          <p class="menu-card__desc">
+            Peeled fresh lychees blended with a whisper of garden mint into a translucent,
+            light sorbet. Tropical, cooling, and utterly refreshing.
+          </p>
+          <div class="menu-card__price">₹130 / scoop</div>
+        </article>
+
+        <!-- 18 -->
+        <article class="menu-card reveal" data-category="nutty">
+          <div class="menu-card__swatch">🫚</div>
+          <div class="menu-card__name">Hazelnut Praline</div>
+          <p class="menu-card__desc">
+            Roasted Piedmont hazelnuts caramelised into praline, crushed and ribboned
+            through a hazelnut-cream base. Deeply nutty and luxurious.
+          </p>
+          <div class="menu-card__price">₹155 / scoop</div>
+        </article>
+
+        <!-- 19 -->
+        <article class="menu-card reveal" data-category="regional">
+          <div class="menu-card__swatch">🍂</div>
+          <div class="menu-card__name">Thandai Spice</div>
+          <p class="menu-card__desc">
+            A festive Holi-inspired blend of cardamom, saffron, rose, melon seeds
+            and pepper in a rich milk base. Warming, exotic, and celebratory.
+          </p>
+          <div class="menu-card__price">₹155 / scoop</div>
+        </article>
+
+        <!-- 20 -->
+        <article class="menu-card reveal" data-category="classic">
+          <div class="menu-card__swatch">🍀</div>
+          <div class="menu-card__name">Mint Chocolate Chip</div>
+          <p class="menu-card__desc">
+            Cool fresh peppermint cream studded generously with dark chocolate chips.
+            Crisp, chilly, and absolutely classic.
+          </p>
+          <div class="menu-card__price">₹130 / scoop</div>
+        </article>
+
+      </div><!-- /menu__grid -->
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       FOOTER / CONTACT
+  ============================================= -->
+  <footer class="footer" id="contact">
+    <div class="container">
+      <div class="footer__grid">
+
+        <!-- Brand column -->
+        <div class="footer__brand">
+          <div class="nav__logo">
+            <div class="nav__logo-icon">🍦</div>
+            Scoops &amp; Smiles
+          </div>
+          <p>Bringing joy, one handcrafted scoop at a time. Made fresh daily in our little parlour with love and the best ingredients nature has to offer.</p>
+          <div class="footer__socials">
+            <a href="#" class="footer__social" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="footer__social" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" class="footer__social" aria-label="Twitter / X"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#" class="footer__social" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <!-- Contact details -->
+        <div class="footer__col">
+          <h4>Find Us</h4>
+          <div class="footer__info">
+            <div class="footer__info-item">
+              <i class="fa-solid fa-location-dot"></i>
+              <span>12, Parlour Lane, Near Rose Garden,<br>Bangalore – 560 001, Karnataka</span>
+            </div>
+            <div class="footer__info-item">
+              <i class="fa-solid fa-phone"></i>
+              <span>+91 98765 43210</span>
+            </div>
+            <div class="footer__info-item">
+              <i class="fa-solid fa-envelope"></i>
+              <span>hello@scoopsandsmiles.in</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hours -->
+        <div class="footer__col">
+          <h4>Opening Hours</h4>
+          <div class="footer__hours">
+            <div class="footer__hours-row"><span>Mon – Thu</span><span>11 am – 10 pm</span></div>
+            <div class="footer__hours-row"><span>Fri – Sat</span><span>11 am – 11 pm</span></div>
+            <div class="footer__hours-row"><span>Sunday</span><span>10 am – 11 pm</span></div>
+            <div class="footer__hours-row"><span>Public Holidays</span><span>10 am – 11 pm</span></div>
+          </div>
+        </div>
+
+      </div><!-- /footer__grid -->
+
+      <!-- Bottom bar -->
+      <div class="footer__bottom">
+        <span>© 2025 Scoops &amp; Smiles. All rights reserved.</span>
+        <span>Made with <span style="color:var(--pink)">♥</span> and a lot of ice cream.</span>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- =============================================
+       JAVASCRIPT
+  ============================================= -->
+  <script>
+    /* ---- Mobile nav toggle ---- */
+    const navToggle = document.getElementById('navToggle');
+    const navMobile = document.getElementById('navMobile');
+
+    navToggle.addEventListener('click', () => {
+      const open = navMobile.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', open);
+      navToggle.innerHTML = open
+        ? '<i class="fa-solid fa-xmark"></i>'
+        : '<i class="fa-solid fa-bars"></i>';
+    });
+
+    function closeMobileNav() {
+      navMobile.classList.remove('open');
+      navToggle.innerHTML = '<i class="fa-solid fa-bars"></i>';
+      navToggle.setAttribute('aria-expanded', false);
+    }
+
+    /* ---- Menu filter tabs ---- */
+    const tabs     = document.querySelectorAll('.menu__tab');
+    const cards    = document.querySelectorAll('.menu-card');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Update active tab
+        tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+
+        const filter = tab.dataset.filter;
+
+        cards.forEach(card => {
+          const match = filter === 'all' || card.dataset.category === filter;
+          card.style.display = match ? '' : 'none';
+        });
+      });
+    });
+
+    /* ---- Scroll reveal ---- */
+    const revealEls = document.querySelectorAll('.reveal');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, idx) => {
+        if (entry.isIntersecting) {
+          // Stagger siblings by index
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, (idx % 6) * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    revealEls.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
